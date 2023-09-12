@@ -6,5 +6,5 @@ type Category struct {
 	gorm.Model
 	Name        string   `json:"name" form:"name" validate:"required"`
 	Description string   `json:"desc" form:"desc" validate:"required"`
-	Courses     []Course `json:"course" form:"course"`
+	Courses     []Course `json:"course" form:"course" gorm:"many2many:courses"`
 }
