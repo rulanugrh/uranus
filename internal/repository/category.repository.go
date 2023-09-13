@@ -33,7 +33,7 @@ func (repo *categorystruct) CreateCategory(req entity.Category) (*entity.Categor
 func (repo *categorystruct) FindAll() ([]entity.Category, error) {
 	var categories []entity.Category
 
-	err := repo.DB.WithContext(context.Background()).Find(&categories).Error
+	err := repo.DB.WithContext(context.Background()).Preload("Courses").Find(&categories).Error
 	if err != nil {
 		log.Printf("Cant find category: %v", err)
 		return []entity.Category{}, err
@@ -45,7 +45,7 @@ func (repo *categorystruct) FindAll() ([]entity.Category, error) {
 func (repo *categorystruct) FindByID(id uint) (*entity.Category, error) {
 	var category entity.Category
 
-	err := repo.DB.WithContext(context.Background()).Where("id = ?", id).Find(&category).Error
+	err := repo.DB.WithContext(context.Background()).Preload("Courses").Where("id = ?", id).Find(&category).Error
 	if err != nil {
 		log.Printf("cant find category: %v", err)
 		return nil, err
