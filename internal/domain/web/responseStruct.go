@@ -40,7 +40,7 @@ type ResponseFindCategory struct {
 	Course      []ListCourse `json:"course" form:"course"`
 }
 
-type ResponseCreateOrder struct {
+type ResponseOrder struct {
 	User     string `json:"user_name" form:"user_name"`
 	Course   string `json:"course_name" form:"course_name"`
 	Price    int    `json:"course_price" form:"course_price"`

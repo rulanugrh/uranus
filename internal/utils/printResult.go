@@ -29,6 +29,18 @@ func PrintResultUser(req entity.User) web.ResponseUser {
 	return response
 }
 
+func PrintResultOrder(req entity.Order) web.ResponseOrder {
+	response := web.ResponseOrder {
+		User: req.UserMod.Name,
+		Course: req.CourseMod.Name,
+		Price: req.CourseMod.Price,
+		Category: req.CourseMod.Categories.Name,
+		Status: req.Status,
+	}
+
+	return response
+}
+
 func PrintResultCreateCategory(req entity.Category) web.ResponseCreateCategory {
 	response := web.ResponseCreateCategory{
 		Name: req.Name,
