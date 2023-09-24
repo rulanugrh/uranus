@@ -17,6 +17,18 @@ func PrintResultCreateCourse(req entity.Course) web.ResponseCreateCourse {
 	return response
 }
 
+func PrintResultUser(req entity.User) web.ResponseUser {
+	response := web.ResponseUser {
+		Name: req.Name,
+		Email: req.Email,
+		Avatar: req.Avatar,
+		Address: req.Avatar,
+		Notelp: req.Notelp,
+	}
+
+	return response
+}
+
 func PrintResultCreateCategory(req entity.Category) web.ResponseCreateCategory {
 	response := web.ResponseCreateCategory{
 		Name: req.Name,

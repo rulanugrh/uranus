@@ -21,7 +21,7 @@ type ResponseFindCourse struct {
 	MaxParticipant int               `json:"max_participant" form:"max_participant"`
 }
 
-type ResponseCreateUser struct {
+type ResponseUser struct {
 	Name    string `json:"name" form:"name"`
 	Email   string `json:"email" form:"email"`
 	Avatar  string `json:"avatar" form:"avatar"`
