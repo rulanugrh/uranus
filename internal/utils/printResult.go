@@ -40,3 +40,33 @@ func PrintResultCourse(req entity.Course) web.ResponseFindCourse {
 
 	return response
 }
+
+func PrintResultAllCourse(req []entity.Course) []web.ResponseFindCourse {
+	var response []web.ResponseFindCourse
+	for _, data := range req {
+		var listParticipant []web.ListParticipant
+		for _, user := range data.Participant{
+			users := web.ListParticipant{
+				UserName: user.UserMod.Name,
+				UserEmail: user.UserMod.Email,
+			}
+
+			listParticipant = append(listParticipant, users)
+		}
+
+		res := web.ResponseFindCourse{
+			Name: data.Name,
+			Price: data.Price,
+			Category: data.Categories.Name,
+			Description: data.Description,
+			Participant: listParticipant,
+			Waktu: data.Waktu,
+			MaxParticipant: data.MaxParticipant,
+		}
+
+		response = append(response, res)
+		
+	}
+
+	return response
+}

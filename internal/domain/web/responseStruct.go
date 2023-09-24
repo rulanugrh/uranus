@@ -41,11 +41,11 @@ type ResponseFindCategory struct {
 }
 
 type ResponseCreateOrder struct {
-	User string `json:"user_name" form:"user_name"`
-	Course string `json:"course_name" form:"course_name"`
-	Price int `json:"course_price" form:"course_price"`
+	User     string `json:"user_name" form:"user_name"`
+	Course   string `json:"course_name" form:"course_name"`
+	Price    int    `json:"course_price" form:"course_price"`
 	Category string `json:"course_category" form:"course_category"`
-	Status bool `json:"status_paid" form:"status_paid"`
+	Status   bool   `json:"status_paid" form:"status_paid"`
 }
 
 type ListCourse struct {
