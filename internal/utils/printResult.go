@@ -17,6 +17,65 @@ func PrintResultCreateCourse(req entity.Course) web.ResponseCreateCourse {
 	return response
 }
 
+func PrintResultCreateCategory(req entity.Category) web.ResponseCreateCategory {
+	response := web.ResponseCreateCategory{
+		Name: req.Name,
+		Description: req.Description,
+	}
+
+	return response
+}
+
+func PrintResultCategoryByID(req entity.Category) web.ResponseFindCategory {
+	var course []web.ListCourse
+	for _, data := range req.Courses {
+		courses := web.ListCourse{
+			Name: data.Name,
+			Description: data.Description,
+			Waktu: data.Waktu,
+			MaxParticipant: data.MaxParticipant,
+			Price: data.Price,
+		}
+
+		course = append(course, courses)
+	}
+
+	response := web.ResponseFindCategory{
+		Name: req.Name,
+		Description: req.Description,
+		Course: course,
+	}
+
+	return response
+}
+
+func PrintResultCategory(req []entity.Category) []web.ResponseFindCategory {
+	var response []web.ResponseFindCategory
+	for _, data := range req{
+		var courseList []web.ListCourse
+		for _, courses := range data.Courses{
+			course := web.ListCourse{
+				Name: courses.Name,
+				Price: courses.Price,
+				MaxParticipant: courses.MaxParticipant,
+				Waktu: courses.Waktu,
+				Description: courses.Description,
+			}
+
+			courseList = append(courseList, course)
+		}
+
+		res := web.ResponseFindCategory{
+			Name: data.Name,
+			Description: data.Description,
+			Course: courseList,
+		}
+
+		response = append(response, res)
+	}
+	return response
+}
+
 func PrintResultCourse(req entity.Course) web.ResponseFindCourse {
 	var listParticipant []web.ListParticipant
 	for _, data := range req.Participant {
