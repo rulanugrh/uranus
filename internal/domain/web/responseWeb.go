@@ -10,3 +10,22 @@ type ResponseFailure struct {
 	Code    int    `json:"code" form:"code"`
 	Message string `json:"message" form:"message"`
 }
+
+type ValidationList struct {
+	Field string      `json:"field"`
+	Error interface{} `json:"error"`
+}
+
+type ValidationError struct {
+	Message string           `json:"message"`
+	Errors  []ValidationList `json:"error"`
+}
+
+func (err ValidationError) Error() string {
+	return err.Message
+}
+
+type WebValidationError struct {
+	Message string      `json:"message"`
+	Error   interface{} `json:"error"`
+}

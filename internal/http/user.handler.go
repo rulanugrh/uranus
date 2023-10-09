@@ -6,20 +6,24 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
 	"github.com/rulanugrh/uranus/internal/domain/entity"
 	"github.com/rulanugrh/uranus/internal/domain/web"
 	portHandler "github.com/rulanugrh/uranus/internal/http/port"
+	"github.com/rulanugrh/uranus/internal/middleware"
 	"github.com/rulanugrh/uranus/internal/service/port"
 )
 
 type userhandler struct {
 	service port.UserInterfaceService
+	validate *validator.Validate
 }
 
 func NewUserHandler(serv port.UserInterfaceService) portHandler.UserInterfaceHTTP {
 	return &userhandler{
 		service: serv,
+		validate: validator.New(),
 	}
 }
 
@@ -28,6 +32,18 @@ func (hnd *userhandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	data, _ := ioutil.ReadAll(r.Body)
 
 	json.Unmarshal(data, &req)
+	errStruct := middleware.ValidateStruct(hnd.validate, req)
+	if errStruct != nil {
+		res := web.WebValidationError {
+			Message: "cant create user",
+			Error: errStruct,
+		}
+		response, _ := json.Marshal(res)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(response)
+
+	}
+	
 	result, err := hnd.service.CreateUser(req)
 	if err != nil {
 		res := web.ResponseFailure{
