@@ -16,13 +16,13 @@ import (
 )
 
 type userhandler struct {
-	service port.UserInterfaceService
+	service  port.UserInterfaceService
 	validate *validator.Validate
 }
 
 func NewUserHandler(serv port.UserInterfaceService) portHandler.UserInterfaceHTTP {
 	return &userhandler{
-		service: serv,
+		service:  serv,
 		validate: validator.New(),
 	}
 }
@@ -32,18 +32,21 @@ func (hnd *userhandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	data, _ := ioutil.ReadAll(r.Body)
 
 	json.Unmarshal(data, &req)
+	password := middleware.HashPassword(req.Password)
+	req.Password = password
+
 	errStruct := middleware.ValidateStruct(hnd.validate, req)
 	if errStruct != nil {
-		res := web.WebValidationError {
+		res := web.WebValidationError{
 			Message: "cant create user",
-			Error: errStruct,
+			Error:   errStruct,
 		}
 		response, _ := json.Marshal(res)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(response)
 
 	}
-	
+
 	result, err := hnd.service.CreateUser(req)
 	if err != nil {
 		res := web.ResponseFailure{
