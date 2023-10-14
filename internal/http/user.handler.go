@@ -48,7 +48,7 @@ func (hnd *userhandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	result, err := hnd.service.CreateUser(req)
+	_, err := hnd.service.CreateUser(req)
 	if err != nil {
 		res := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
@@ -60,10 +60,15 @@ func (hnd *userhandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(response)
 	}
 
+	token, errToken := middleware.GenerateToken(req)
+	if errToken != nil {
+		log.Printf("Cant generate token because: %v", errToken)
+	}
+
 	res := web.ResponseSuccess{
 		Code:    200,
 		Message: "Success create user",
-		Data:    result,
+		Data:    token,
 	}
 
 	response, _ := json.Marshal(res)
