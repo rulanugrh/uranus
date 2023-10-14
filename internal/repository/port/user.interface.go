@@ -7,4 +7,5 @@ type UserInterfaceRepository interface {
 	FindByID(id uint) (*entity.User, error)
 	UpdateUser(id uint, req entity.User) (*entity.User, error)
 	DeleteUser(id uint) error
+	FindByEmail(email string) (*entity.User, error)
 }

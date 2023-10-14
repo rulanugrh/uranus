@@ -10,4 +10,5 @@ type UserInterfaceService interface {
 	UpdateUser(id uint, req entity.User) (*web.ResponseUser, error)
 	FindByID(id uint) (*web.ResponseUser, error)
 	DeleteUser(id uint) error
+	FindByEmail(email string) (*web.ResponseUser, error)
 }

@@ -7,6 +7,7 @@ import (
 	portServ "github.com/rulanugrh/uranus/internal/service/port"
 	"github.com/rulanugrh/uranus/internal/utils"
 )
+
 type userstruct struct {
 	repository port.UserInterfaceRepository
 }
@@ -16,7 +17,7 @@ func NewUserService(repo port.UserInterfaceRepository) portServ.UserInterfaceSer
 		repository: repo,
 	}
 }
-func(userserv *userstruct) CreateUser(req entity.User) (*web.ResponseUser, error) {
+func (userserv *userstruct) CreateUser(req entity.User) (*web.ResponseUser, error) {
 	data, err := userserv.repository.CreateUser(req)
 	if err != nil {
 		return nil, err
@@ -26,7 +27,7 @@ func(userserv *userstruct) CreateUser(req entity.User) (*web.ResponseUser, error
 	return &response, nil
 }
 
-func(userserv *userstruct) UpdateUser(id uint, req entity.User) (*web.ResponseUser, error) {
+func (userserv *userstruct) UpdateUser(id uint, req entity.User) (*web.ResponseUser, error) {
 	data, err := userserv.repository.UpdateUser(id, req)
 	if err != nil {
 		return nil, err
@@ -36,7 +37,7 @@ func(userserv *userstruct) UpdateUser(id uint, req entity.User) (*web.ResponseUs
 	return &response, nil
 }
 
-func(userserv *userstruct) FindByID(id uint) (*web.ResponseUser, error) {
+func (userserv *userstruct) FindByID(id uint) (*web.ResponseUser, error) {
 	data, err := userserv.repository.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -46,11 +47,21 @@ func(userserv *userstruct) FindByID(id uint) (*web.ResponseUser, error) {
 	return &response, nil
 }
 
-func(userserv *userstruct) DeleteUser(id uint) error {
+func (userserv *userstruct) DeleteUser(id uint) error {
 	err := userserv.repository.DeleteUser(id)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (userserv *userstruct) FindByEmail(email string) (*web.ResponseUser, error) {
+	data, err := userserv.repository.FindByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	response := utils.PrintResultUser(*data)
+	return &response, nil
 }

@@ -14,7 +14,7 @@ type userstruct struct {
 }
 
 func NewUserRepository(db *gorm.DB) port.UserInterfaceRepository {
-	return &userstruct {
+	return &userstruct{
 		DB: db,
 	}
 }
@@ -63,4 +63,15 @@ func (repo *userstruct) DeleteUser(id uint) error {
 	}
 
 	return nil
+}
+
+func (repo *userstruct) FindByEmail(email string) (*entity.User, error) {
+	var user entity.User
+	err := repo.DB.WithContext(context.Background()).Where("email = ?", email).Find(&user).Error
+	if err != nil {
+		log.Printf("cant find user by this email: %v", err)
+		return nil, err
+	}
+
+	return &user, nil
 }

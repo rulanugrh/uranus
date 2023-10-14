@@ -3,6 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -160,4 +161,44 @@ func (hnd *userhandler) Delete(w http.ResponseWriter, r *http.Request) {
 	response, _ := json.Marshal(res)
 	w.WriteHeader(http.StatusOK)
 	w.Write(response)
+}
+
+func (hnd *userhandler) Login(w http.ResponseWriter, r *http.Request) {
+	var req entity.User
+	data, _ := ioutil.ReadAll(r.Body)
+
+	json.Unmarshal(data, &req)
+
+	result, err := hnd.service.FindByEmail(req.Email)
+	if err != nil {
+		res := web.ResponseFailure{
+			Code:    http.StatusNotFound,
+			Message: "cant login",
+		}
+
+		response, _ := json.Marshal(res)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(response)
+	}
+
+	compare := []byte(req.Password)
+	if errCheck := middleware.ComparePassword(req.Password, compare); errCheck != nil {
+		res := web.ResponseFailure{
+			Message: "Password not matched",
+		}
+		log.Printf("password not matched because: %v", err)
+		response, _ := json.Marshal(res)
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write(response)
+	}
+
+	res := web.ResponseSuccess{
+		Code:    http.StatusOK,
+		Message: "success login",
+		Data:    result,
+	}
+	response, _ := json.Marshal(res)
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
+
 }

@@ -24,10 +24,11 @@ func Run(course port.CourseInterfaceHTTP, order port.OrderInterfaceHTTP, user po
 	router.HandleFunc("/api/order/{id}", order.FindByID).Methods("GET")
 
 	// endpoint user
-	router.HandleFunc("/api/user", user.CreateUser).Methods("POST")
+	router.HandleFunc("/api/user/auth", user.CreateUser).Methods("POST")
 	router.HandleFunc("/api/user/{id}", user.Update).Methods("PUT")
 	router.HandleFunc("/api/user/{id}", user.FindByID).Methods("GET")
 	router.HandleFunc("/api/user/{id}", user.Delete).Methods("DELETE")
+	router.HandleFunc("/api/user/login", user.Login).Methods("POST")
 
 	// endpoint category
 	router.HandleFunc("/api/category", category.CreateCategory).Methods("POST")
