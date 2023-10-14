@@ -1,0 +1,9 @@
+version: '3.3'
+services:
+  uranus: 
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports: 
+      - 3000:3000
+    container_name: uranus-app
