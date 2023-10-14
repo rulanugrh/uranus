@@ -21,6 +21,7 @@ func Run(course port.CourseInterfaceHTTP, order port.OrderInterfaceHTTP, user po
 
 	// endpoint order
 	router.HandleFunc("/api/order", order.CreateOrder).Methods("POST")
+	router.HandleFunc("/api/order/checkout/{id}", order.Checkout).Methods("GET")
 	router.HandleFunc("/api/order/{id}", order.FindByID).Methods("GET")
 
 	// endpoint user

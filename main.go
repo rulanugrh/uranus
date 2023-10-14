@@ -7,9 +7,11 @@ import (
 	"github.com/rulanugrh/uranus/internal/repository"
 	"github.com/rulanugrh/uranus/internal/service"
 	"github.com/rulanugrh/uranus/route"
+	payment "github.com/rulanugrh/uranus/third_party/midtrans"
 )
 
 func main() {
+	configs.SetupMidtransSandbox()
 	db := configs.GetMysqlConn()
 	db.AutoMigrate(&entity.Category{}, &entity.Course{}, &entity.Order{}, &entity.User{})
 
@@ -26,7 +28,10 @@ func main() {
 	userHandler := handler.NewUserHandler(userService)
 	categoryHandler := handler.NewCategoryHandler(categoryService)
 	courseHandler := handler.NewCourseHandler(courseService)
-	orderHandler := handler.NewOrderHandler(orderService)
+
+	paymentMethod := payment.NewPayment(userRepository, orderRepository, courseRepository)
+
+	orderHandler := handler.NewOrderHandler(orderService, paymentMethod)
 
 	route.Run(courseHandler, orderHandler, userHandler, categoryHandler)
 }

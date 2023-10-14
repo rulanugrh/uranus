@@ -38,6 +38,7 @@ github.com/leodido/go-urn
 # github.com/midtrans/midtrans-go v1.3.7
 ## explicit; go 1.13
 github.com/midtrans/midtrans-go
+github.com/midtrans/midtrans-go/coreapi
 github.com/midtrans/midtrans-go/snap
 # golang.org/x/crypto v0.14.0
 ## explicit; go 1.17

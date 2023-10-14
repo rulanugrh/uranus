@@ -6,7 +6,7 @@ import (
 )
 
 type PaymentSandbox struct {
-	StatusCode         int                         `json:"status_code"`
+	StatusCode         string                      `json:"status_code"`
 	Token              string                      `json:"token"`
 	RedirectURL        string                      `json:"redirect_url"`
 	TransactionDetails midtrans.TransactionDetails `json:"transcation_details"`

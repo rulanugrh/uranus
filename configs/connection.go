@@ -6,6 +6,8 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/midtrans/midtrans-go"
+	"github.com/midtrans/midtrans-go/coreapi"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -37,6 +39,14 @@ type App struct {
 }
 
 var app *App
+
+var Core coreapi.Client
+
+func SetupMidtransSandbox() {
+	conf := GetConfig()
+	midtrans.ServerKey = conf.Midtrans.Sandbox
+	midtrans.Environment = midtrans.Sandbox
+}
 
 func GetMysqlConn() *gorm.DB {
 	conf := GetConfig()
