@@ -48,7 +48,7 @@ func (hnd *userhandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	_, err := hnd.service.CreateUser(req)
+	result, err := hnd.service.CreateUser(req)
 	if err != nil {
 		res := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
@@ -65,10 +65,11 @@ func (hnd *userhandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Cant generate token because: %v", errToken)
 	}
 
-	res := web.ResponseSuccess{
+	res := web.ResponseSuccessAuth{
 		Code:    200,
 		Message: "Success create user",
-		Data:    token,
+		Data:    result,
+		Token:   token,
 	}
 
 	response, _ := json.Marshal(res)
@@ -214,7 +215,7 @@ func (hnd *userhandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 
 	json.Unmarshal(data, &req)
 
-	_, err := hnd.service.FindByEmail(req.Email)
+	result, err := hnd.service.FindByEmail(req.Email)
 	if err != nil {
 		res := web.ResponseFailure{
 			Code:    http.StatusNotFound,
@@ -231,9 +232,11 @@ func (hnd *userhandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Cant generate token because: %v", errToken)
 	}
 
-	res := web.ResponseSuccess{
+	res := web.ResponseSuccessAuth{
+		Code:    http.StatusOK,
 		Message: "success refreh token ",
-		Data:    token,
+		Data:    result,
+		Token:   token,
 	}
 	response, _ := json.Marshal(res)
 

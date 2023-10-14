@@ -30,6 +30,10 @@ type App struct {
 	}
 
 	JWTSecret string
+	Midtrans  struct {
+		Sandbox    string
+		Production string
+	}
 }
 
 var app *App
@@ -75,6 +79,10 @@ func initConfig() *App {
 		// config jwtsecret env
 		conf.JWTSecret = ""
 
+		// config secret midtrans env
+		conf.Midtrans.Sandbox = ""
+		conf.Midtrans.Production = ""
+
 		return &conf
 	}
 
@@ -91,6 +99,8 @@ func initConfig() *App {
 	conf.Server.Port = os.Getenv("APP_PORT")
 
 	conf.JWTSecret = os.Getenv("JWT_SECRET")
+	conf.Midtrans.Sandbox = os.Getenv("MIDTRANS_SANDBOX")
+	conf.Midtrans.Production = os.Getenv("MIDTRANS_PRODUCTION")
 
 	return &conf
 }

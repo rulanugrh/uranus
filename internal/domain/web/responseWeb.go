@@ -11,6 +11,12 @@ type ResponseFailure struct {
 	Message string `json:"message" form:"message"`
 }
 
+type ResponseSuccessAuth struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    any    `json:"data"`
+	Token   string `json:"token"`
+}
 type ValidationList struct {
 	Field string      `json:"field"`
 	Error interface{} `json:"error"`
