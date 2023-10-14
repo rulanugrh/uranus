@@ -17,7 +17,7 @@ func NewCourseRepository(db *gorm.DB) port.CourseInterfaceRepository {
 	return &coursestruct{DB: db}
 }
 
-func (repo *coursestruct) CreateCourse(req entity.Course) (*entity.Course, error ) {
+func (repo *coursestruct) CreateCourse(req entity.Course) (*entity.Course, error) {
 	err := repo.DB.WithContext(context.Background()).Create(&req).Error
 	if err != nil {
 		log.Printf("Cant create course to db because: %v", err)
@@ -29,7 +29,7 @@ func (repo *coursestruct) CreateCourse(req entity.Course) (*entity.Course, error
 
 func (repo *coursestruct) FindCourse() ([]entity.Course, error) {
 	var courses []entity.Course
-	
+
 	err := repo.DB.WithContext(context.Background()).Preload("Category").Preload("Participant.User").Find(&courses).Error
 	if err != nil {
 		log.Printf("Cant find course because: %v", err)
@@ -70,6 +70,6 @@ func (repo *coursestruct) DeleteCourse(id uint) error {
 		log.Printf("Cant delete course, because: %v", err)
 		return err
 	}
-	
+
 	return nil
 }

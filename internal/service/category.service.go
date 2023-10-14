@@ -7,6 +7,7 @@ import (
 	portServ "github.com/rulanugrh/uranus/internal/service/port"
 	"github.com/rulanugrh/uranus/internal/utils"
 )
+
 type categorystruct struct {
 	repository port.CategoryInterfaceRepository
 }
@@ -17,7 +18,7 @@ func NewCategoryServices(repo port.CategoryInterfaceRepository) portServ.Categor
 	}
 }
 
-func(cateserv *categorystruct) CreateCategory(req entity.Category) (*web.ResponseCreateCategory, error) {
+func (cateserv *categorystruct) CreateCategory(req entity.Category) (*web.ResponseCreateCategory, error) {
 	data, err := cateserv.repository.CreateCategory(req)
 	if err != nil {
 		return nil, err
@@ -27,7 +28,7 @@ func(cateserv *categorystruct) CreateCategory(req entity.Category) (*web.Respons
 	return &response, nil
 }
 
-func(cateserv *categorystruct) FindByID(id uint) (*web.ResponseFindCategory, error) {
+func (cateserv *categorystruct) FindByID(id uint) (*web.ResponseFindCategory, error) {
 	data, err := cateserv.repository.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -37,7 +38,7 @@ func(cateserv *categorystruct) FindByID(id uint) (*web.ResponseFindCategory, err
 	return &response, nil
 }
 
-func(cateserv *categorystruct) FindAll() ([]web.ResponseFindCategory, error) {
+func (cateserv *categorystruct) FindAll() ([]web.ResponseFindCategory, error) {
 	data, err := cateserv.repository.FindAll()
 	if err != nil {
 		return []web.ResponseFindCategory{}, nil

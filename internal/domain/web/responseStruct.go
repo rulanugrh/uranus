@@ -44,6 +44,7 @@ type ResponseOrder struct {
 	User     string `json:"user_name" form:"user_name"`
 	Course   string `json:"course_name" form:"course_name"`
 	Price    int    `json:"course_price" form:"course_price"`
+	Quantity int    `json:"quantity_order" form:"quantity_order"`
 	Category string `json:"course_category" form:"course_category"`
 	Status   bool   `json:"status_paid" form:"status_paid"`
 }
