@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/coreapi"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type App struct {
@@ -49,13 +51,35 @@ func SetupMidtransSandbox() {
 }
 
 func GetMysqlConn() *gorm.DB {
+	loggger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags),
+		logger.Config{
+			SlowThreshold:             5 * time.Second,
+			LogLevel:                  logger.Info,
+			IgnoreRecordNotFoundError: true,
+			ParameterizedQueries:      true,
+			Colorful:                  false,
+		},
+	)
+
 	conf := GetConfig()
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=True&charset=utf8mb4&loc=Local", conf.Mysql.Name, conf.Mysql.Pass, conf.Mysql.Host, conf.Mysql.Port, conf.Mysql.Name)
 
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger: loggger,
+	})
 	if err != nil {
 		log.Printf("Cant connect to database because %v", err)
 	}
+
+	sqldb, errs := db.DB()
+	if errs != nil {
+		log.Printf("Something error : %v", errs)
+	}
+
+	sqldb.SetConnMaxIdleTime(10)
+	sqldb.SetMaxOpenConns(100)
+	sqldb.SetConnMaxLifetime(time.Hour)
 
 	return db
 }
