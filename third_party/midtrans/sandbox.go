@@ -3,6 +3,7 @@ package payment
 import (
 	"fmt"
 
+	"github.com/jinzhu/copier"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/snap"
 	"github.com/rulanugrh/uranus/configs"
@@ -83,15 +84,38 @@ func paymentCharge(serverkey string, course entity.Course, id uint, user entity.
 
 	res.Token = token
 
-	pay := entity.PaymentSandbox{
-		Token:              res.Token,
-		CustomerDetails:    chargeReq.CustomerDetail,
-		ItemsDetails:       chargeReq.Items,
-		RedirectURL:        res.RedirectURL,
-		TransactionDetails: chargeReq.TransactionDetails,
-		StatusCode:         res.StatusCode,
-		PaymentType:        chargeReq.EnabledPayments,
+	var items []entity.ItemDetail
+	var paymentsType []entity.PaymentTypes
+
+	for _, data := range *chargeReq.Items {
+		item := entity.ItemDetail{
+			ID: data.ID,
+			Name: data.Name,
+			Brand: data.Brand,
+			Qty: data.Qty,
+			Price: data.Price,
+			Category: data.Category,
+			MerchantName: data.MerchantName,
+		}
+
+		items = append(items, item)
 	}
 
+	copier.Copy(&paymentsType, &chargeReq.EnabledPayments)
+
+	pay := entity.PaymentSandbox {
+		TransactionDetails: entity.TransactionDetail{
+			OrderID: chargeReq.TransactionDetails.OrderID,
+			GrossAmount: chargeReq.TransactionDetails.GrossAmt,
+		},
+		CustomerDetails: entity.CustomerDetail{
+			Name: chargeReq.CustomerDetail.FName,
+			Email: chargeReq.CustomerDetail.Email,
+			Address: chargeReq.CustomerDetail.Phone,
+		},
+		ItemsDetails: items,
+		PaymentType: paymentsType,
+	}
+	
 	return &pay, nil
 }

@@ -99,7 +99,7 @@ func (hnd *orderhandler) FindByID(w http.ResponseWriter, r *http.Request) {
 	w.Write(response)
 }
 
-func (hnd *orderhandler) Checkout(w http.ResponseWriter, r *http.Request) {
+func (hnd *orderhandler) TestCheckout(w http.ResponseWriter, r *http.Request) {
 	var req entity.Order
 	data, _ := ioutil.ReadAll(r.Body)
 
