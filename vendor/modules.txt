@@ -61,7 +61,7 @@ golang.org/x/text/internal/language
 golang.org/x/text/internal/language/compact
 golang.org/x/text/internal/tag
 golang.org/x/text/language
-# gorm.io/driver/mysql v1.5.1
+# gorm.io/driver/mysql v1.5.2
 ## explicit; go 1.14
 gorm.io/driver/mysql
 # gorm.io/gorm v1.25.5
