@@ -19,6 +19,7 @@ func main() {
 	categoryRepository := repository.NewCategoryRepository(db)
 	courseRepository := repository.NewCourseRepository(db)
 	orderRepository := repository.NewOrderRepository(db)
+	paymentRepository := repository.NewPaymentRepository(db)
 
 	userService := service.NewUserService(userRepository)
 	categoryService := service.NewCategoryServices(categoryRepository)
@@ -29,7 +30,7 @@ func main() {
 	categoryHandler := handler.NewCategoryHandler(categoryService)
 	courseHandler := handler.NewCourseHandler(courseService)
 
-	paymentMethod := payment.NewPayment(userRepository, orderRepository, courseRepository)
+	paymentMethod := payment.NewPayment(paymentRepository ,userRepository, orderRepository, courseRepository)
 
 	orderHandler := handler.NewOrderHandler(orderService, paymentMethod)
 

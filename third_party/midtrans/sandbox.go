@@ -16,10 +16,12 @@ type payment struct {
 	user   port.UserInterfaceRepository
 	order  port.OrderInterfaceRepository
 	course port.CourseInterfaceRepository
+	pay port.PaymentRepository
 }
 
-func NewPayment(user port.UserInterfaceRepository, order port.OrderInterfaceRepository, course port.CourseInterfaceRepository) portthirdparty.PortSandbox {
+func NewPayment(pay port.PaymentRepository, user port.UserInterfaceRepository, order port.OrderInterfaceRepository, course port.CourseInterfaceRepository) portthirdparty.PortSandbox {
 	return &payment{
+		pay: pay,
 		user:   user,
 		order:  order,
 		course: course,
@@ -43,7 +45,12 @@ func (pay *payment) Checkout(id uint, order entity.Order) (*entity.PaymentSandbo
 		return nil, err
 	}
 
-	return res, nil
+	resolve, err := pay.pay.Save(*res)
+	if err != nil {
+		return nil, err
+	}
+
+	return resolve, nil
 
 }
 
@@ -116,6 +123,6 @@ func paymentCharge(serverkey string, course entity.Course, id uint, user entity.
 		ItemsDetails: items,
 		PaymentType: paymentsType,
 	}
-	
+
 	return &pay, nil
 }
