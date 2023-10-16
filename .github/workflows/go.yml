@@ -19,6 +19,11 @@ jobs:
       with:
         go-version: '1.18'
 
+    - name: setup env
+      run: |
+        echo "::set-env name=GOPATH::$(go env GOPATH)"
+        echo "::add-path::$(go env GOPATH)/bin"
+
     - name: Install Dependency
       run: |
         go version
