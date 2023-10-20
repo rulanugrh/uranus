@@ -16,12 +16,12 @@ type payment struct {
 	user   port.UserInterfaceRepository
 	order  port.OrderInterfaceRepository
 	course port.CourseInterfaceRepository
-	pay port.PaymentRepository
+	pay    port.PaymentRepository
 }
 
 func NewPayment(pay port.PaymentRepository, user port.UserInterfaceRepository, order port.OrderInterfaceRepository, course port.CourseInterfaceRepository) portthirdparty.PortSandbox {
 	return &payment{
-		pay: pay,
+		pay:    pay,
 		user:   user,
 		order:  order,
 		course: course,
@@ -96,12 +96,12 @@ func paymentCharge(serverkey string, course entity.Course, id uint, user entity.
 
 	for _, data := range *chargeReq.Items {
 		item := entity.ItemDetail{
-			ID: data.ID,
-			Name: data.Name,
-			Brand: data.Brand,
-			Qty: data.Qty,
-			Price: data.Price,
-			Category: data.Category,
+			ID:           data.ID,
+			Name:         data.Name,
+			Brand:        data.Brand,
+			Qty:          data.Qty,
+			Price:        data.Price,
+			Category:     data.Category,
 			MerchantName: data.MerchantName,
 		}
 
@@ -110,18 +110,18 @@ func paymentCharge(serverkey string, course entity.Course, id uint, user entity.
 
 	copier.Copy(&paymentsType, &chargeReq.EnabledPayments)
 
-	pay := entity.PaymentSandbox {
+	pay := entity.PaymentSandbox{
 		TransactionDetails: entity.TransactionDetail{
-			OrderID: chargeReq.TransactionDetails.OrderID,
+			OrderID:     chargeReq.TransactionDetails.OrderID,
 			GrossAmount: chargeReq.TransactionDetails.GrossAmt,
 		},
 		CustomerDetails: entity.CustomerDetail{
-			Name: chargeReq.CustomerDetail.FName,
-			Email: chargeReq.CustomerDetail.Email,
+			Name:    chargeReq.CustomerDetail.FName,
+			Email:   chargeReq.CustomerDetail.Email,
 			Address: chargeReq.CustomerDetail.Phone,
 		},
 		ItemsDetails: items,
-		PaymentType: paymentsType,
+		PaymentType:  paymentsType,
 	}
 
 	return &pay, nil

@@ -30,7 +30,7 @@ func main() {
 	categoryHandler := handler.NewCategoryHandler(categoryService)
 	courseHandler := handler.NewCourseHandler(courseService)
 
-	paymentMethod := payment.NewPayment(paymentRepository ,userRepository, orderRepository, courseRepository)
+	paymentMethod := payment.NewPayment(paymentRepository, userRepository, orderRepository, courseRepository)
 
 	orderHandler := handler.NewOrderHandler(orderService, paymentMethod)
 
