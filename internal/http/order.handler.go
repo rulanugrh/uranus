@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
@@ -14,6 +15,7 @@ import (
 	"github.com/rulanugrh/uranus/internal/middleware"
 	"github.com/rulanugrh/uranus/internal/service/port"
 	portthirdparty "github.com/rulanugrh/uranus/third_party/midtrans/port"
+	"github.com/rulanugrh/uranus/third_party/monitoring"
 )
 
 type orderhandler struct {
@@ -47,6 +49,10 @@ func (hnd *orderhandler) CreateOrder(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+	tracing := monitoring.StartTracing(r.Context(), "Handle Create Order")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.service.CreateOrder(req)
 	if err != nil {
 		res := web.ResponseFailure{
@@ -75,6 +81,10 @@ func (hnd *orderhandler) FindByID(w http.ResponseWriter, r *http.Request) {
 	paramsID := getID["id"]
 
 	id, _ := strconv.Atoi(paramsID)
+
+	tracing := monitoring.StartTracing(r.Context(), "Handle Find Order")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
 
 	result, err := hnd.service.FindByID(uint(id))
 	if err != nil {
@@ -109,6 +119,10 @@ func (hnd *orderhandler) TestCheckout(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(paramsID)
 
+	tracing := monitoring.StartTracing(r.Context(), "Handle Checkout Order")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.payment.Checkout(uint(id), req)
 	if err != nil {
 		res := web.ResponseFailure{
@@ -137,6 +151,11 @@ func (hnd *orderhandler) History(w http.ResponseWriter, r *http.Request) {
 	paramsID := getID["id"]
 
 	id, _ := strconv.Atoi(paramsID)
+
+	tracing := monitoring.StartTracing(r.Context(), "Handle History Order")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.payment.History(uint(id))
 
 	if err != nil {

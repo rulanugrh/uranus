@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
@@ -13,16 +14,17 @@ import (
 	portHandler "github.com/rulanugrh/uranus/internal/http/port"
 	"github.com/rulanugrh/uranus/internal/middleware"
 	"github.com/rulanugrh/uranus/internal/service/port"
+	"github.com/rulanugrh/uranus/third_party/monitoring"
 )
 
 type coursehandler struct {
-	service port.CourseInterfaceService
+	service  port.CourseInterfaceService
 	validate *validator.Validate
 }
 
 func NewCourseHandler(serv port.CourseInterfaceService) portHandler.CourseInterfaceHTTP {
 	return &coursehandler{
-		service: serv,
+		service:  serv,
 		validate: validator.New(),
 	}
 }
@@ -34,16 +36,20 @@ func (hnd *coursehandler) CreateCourse(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(data, &req)
 	errStruct := middleware.ValidateStruct(hnd.validate, req)
 	if errStruct != nil {
-		res := web.WebValidationError {
+		res := web.WebValidationError{
 			Message: "cant create course",
-			Error: errStruct,
+			Error:   errStruct,
 		}
 		response, _ := json.Marshal(res)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(response)
 
 	}
-	
+
+	tracing := monitoring.StartTracing(r.Context(), "Handle Create Course")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.service.CreateCourse(req)
 	if err != nil {
 		res := web.ResponseFailure{
@@ -72,6 +78,10 @@ func (hnd *coursehandler) FindByID(w http.ResponseWriter, r *http.Request) {
 	paramsID := getID["id"]
 
 	id, _ := strconv.Atoi(paramsID)
+
+	tracing := monitoring.StartTracing(r.Context(), "Handle Find Course")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
 
 	result, err := hnd.service.FindById(uint(id))
 	if err != nil {
@@ -107,6 +117,10 @@ func (hnd *coursehandler) Update(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(paramsID)
 
+	tracing := monitoring.StartTracing(r.Context(), "Handle Update Course")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.service.UpdateCourse(uint(id), req)
 	if err != nil {
 		res := web.ResponseFailure{
@@ -131,6 +145,10 @@ func (hnd *coursehandler) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (hnd *coursehandler) FindAll(w http.ResponseWriter, r *http.Request) {
+	tracing := monitoring.StartTracing(r.Context(), "Handle FindAll Course")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.service.FindCourse()
 	if err != nil {
 		res := web.ResponseFailure{
@@ -159,6 +177,10 @@ func (hnd *coursehandler) Delete(w http.ResponseWriter, r *http.Request) {
 	paramsID := getID["id"]
 
 	id, _ := strconv.Atoi(paramsID)
+
+	tracing := monitoring.StartTracing(r.Context(), "Handle Delete Course")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
 
 	err := hnd.service.DeleteCourse(uint(id))
 	if err != nil {

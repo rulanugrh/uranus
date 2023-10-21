@@ -8,11 +8,13 @@ import (
 	"github.com/rulanugrh/uranus/configs"
 	"github.com/rulanugrh/uranus/internal/http/port"
 	"github.com/rulanugrh/uranus/internal/middleware"
+	"github.com/rulanugrh/uranus/third_party/monitoring"
 )
 
 func Run(course port.CourseInterfaceHTTP, order port.OrderInterfaceHTTP, user port.UserInterfaceHTTP, category port.CategoryIntefaceHTTP) {
 	router := mux.NewRouter().StrictSlash(true)
 	conf := configs.GetConfig()
+	monitoring.InitConfig()
 
 	router.HandleFunc("/user/auth", user.CreateUser).Methods("POST")
 	router.HandleFunc("/user/login", user.Login).Methods("POST")

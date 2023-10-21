@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
@@ -13,16 +14,17 @@ import (
 	portHandler "github.com/rulanugrh/uranus/internal/http/port"
 	"github.com/rulanugrh/uranus/internal/middleware"
 	"github.com/rulanugrh/uranus/internal/service/port"
+	"github.com/rulanugrh/uranus/third_party/monitoring"
 )
 
 type categoryhandler struct {
-	service port.CategoryInterfaceService
+	service  port.CategoryInterfaceService
 	validate *validator.Validate
 }
 
 func NewCategoryHandler(serv port.CategoryInterfaceService) portHandler.CategoryIntefaceHTTP {
 	return &categoryhandler{
-		service: serv,
+		service:  serv,
 		validate: validator.New(),
 	}
 }
@@ -34,16 +36,20 @@ func (hnd *categoryhandler) CreateCategory(w http.ResponseWriter, r *http.Reques
 	json.Unmarshal(data, &req)
 	errStruct := middleware.ValidateStruct(hnd.validate, req)
 	if errStruct != nil {
-		res := web.WebValidationError {
+		res := web.WebValidationError{
 			Message: "cant create category",
-			Error: errStruct,
+			Error:   errStruct,
 		}
 		response, _ := json.Marshal(res)
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write(response)
 
 	}
-	
+
+	tracing := monitoring.StartTracing(r.Context(), "Handle Create Category")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.service.CreateCategory(req)
 	if err != nil {
 		res := web.ResponseFailure{
@@ -73,6 +79,10 @@ func (hnd *categoryhandler) FindByID(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(paramsID)
 
+	tracing := monitoring.StartTracing(r.Context(), "Handle Find Category")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.service.FindByID(uint(id))
 	if err != nil {
 		res := web.ResponseFailure{
@@ -97,6 +107,10 @@ func (hnd *categoryhandler) FindByID(w http.ResponseWriter, r *http.Request) {
 }
 
 func (hnd *categoryhandler) FindAll(w http.ResponseWriter, r *http.Request) {
+	tracing := monitoring.StartTracing(r.Context(), "Handle FindAll Category")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.service.FindAll()
 	if err != nil {
 		res := web.ResponseFailure{

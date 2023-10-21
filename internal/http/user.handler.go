@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
@@ -14,6 +15,7 @@ import (
 	portHandler "github.com/rulanugrh/uranus/internal/http/port"
 	"github.com/rulanugrh/uranus/internal/middleware"
 	"github.com/rulanugrh/uranus/internal/service/port"
+	"github.com/rulanugrh/uranus/third_party/monitoring"
 )
 
 type userhandler struct {
@@ -47,6 +49,10 @@ func (hnd *userhandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.Write(response)
 
 	}
+
+	tracing := monitoring.StartTracing(r.Context(), "Handle Create User")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
 
 	result, err := hnd.service.CreateUser(req)
 	if err != nil {
@@ -83,6 +89,10 @@ func (hnd *userhandler) FindByID(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(paramsID)
 
+	tracing := monitoring.StartTracing(r.Context(), "Handle Find User by ID")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.service.FindByID(uint(id))
 	if err != nil {
 		res := web.ResponseFailure{
@@ -117,6 +127,10 @@ func (hnd *userhandler) Update(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(paramsID)
 
+	tracing := monitoring.StartTracing(r.Context(), "Handle Update User by ID")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	result, err := hnd.service.UpdateUser(uint(id), req)
 	if err != nil {
 		res := web.ResponseFailure{
@@ -146,6 +160,10 @@ func (hnd *userhandler) Delete(w http.ResponseWriter, r *http.Request) {
 
 	id, _ := strconv.Atoi(paramsID)
 
+	tracing := monitoring.StartTracing(r.Context(), "Handle Delete User")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
+
 	err := hnd.service.DeleteUser(uint(id))
 	if err != nil {
 		res := web.ResponseFailure{
@@ -174,6 +192,10 @@ func (hnd *userhandler) Login(w http.ResponseWriter, r *http.Request) {
 	data, _ := ioutil.ReadAll(r.Body)
 
 	json.Unmarshal(data, &req)
+
+	tracing := monitoring.StartTracing(r.Context(), "Handle Login User")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
 
 	result, err := hnd.service.FindByEmail(req.Email)
 	if err != nil {
@@ -214,6 +236,10 @@ func (hnd *userhandler) RefreshToken(w http.ResponseWriter, r *http.Request) {
 	data, _ := ioutil.ReadAll(r.Body)
 
 	json.Unmarshal(data, &req)
+
+	tracing := monitoring.StartTracing(r.Context(), "Handle Refresh Token JWT")
+	time.Sleep(time.Second / 2)
+	tracing.Finish()
 
 	result, err := hnd.service.FindByEmail(req.Email)
 	if err != nil {

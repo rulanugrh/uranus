@@ -38,6 +38,11 @@ type App struct {
 		Sandbox    string
 		Production string
 	}
+
+	Jaeger struct {
+		Host string
+		Port string
+	}
 }
 
 var app *App
@@ -117,6 +122,9 @@ func initConfig() *App {
 		conf.Midtrans.Sandbox = ""
 		conf.Midtrans.Production = ""
 
+		conf.Jaeger.Host = ""
+		conf.Jaeger.Port = ""
+
 		return &conf
 	}
 
@@ -136,5 +144,7 @@ func initConfig() *App {
 	conf.Midtrans.Sandbox = os.Getenv("MIDTRANS_SANDBOX")
 	conf.Midtrans.Production = os.Getenv("MIDTRANS_PRODUCTION")
 
+	conf.Jaeger.Host = os.Getenv("JAEGER_HOST")
+	conf.Jaeger.Port = os.Getenv("JAEGER_PORT")
 	return &conf
 }
