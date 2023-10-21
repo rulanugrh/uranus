@@ -54,6 +54,15 @@ func (pay *payment) Checkout(id uint, order entity.Order) (*entity.PaymentSandbo
 
 }
 
+func (pay *payment) History(id uint) (*entity.PaymentSandbox, error) {
+	data, err := pay.pay.History(id)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
+}
+
 func paymentCharge(serverkey string, course entity.Course, id uint, user entity.User, order entity.Order) (*entity.PaymentSandbox, error) {
 	configs.Core.New(serverkey, midtrans.Sandbox)
 	chargeReq := &snap.Request{
