@@ -131,3 +131,32 @@ func (hnd *orderhandler) TestCheckout(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(response)
 }
+
+func (hnd *orderhandler) History(w http.ResponseWriter, r *http.Request) {
+	getID := mux.Vars(r)
+	paramsID := getID["id"]
+
+	id, _ := strconv.Atoi(paramsID)
+	result, err := hnd.payment.History(uint(id))
+
+	if err != nil {
+		res := web.ResponseFailure{
+			Code:    http.StatusBadRequest,
+			Message: "Cant check history by this id",
+		}
+
+		response, _ := json.Marshal(res)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(response)
+	}
+
+	res := web.ResponseSuccess{
+		Code:    http.StatusOK,
+		Message: "Success checkout order",
+		Data:    result,
+	}
+
+	response, _ := json.Marshal(res)
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
+}
