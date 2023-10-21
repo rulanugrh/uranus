@@ -152,7 +152,7 @@ func (hnd *orderhandler) History(w http.ResponseWriter, r *http.Request) {
 
 	res := web.ResponseSuccess{
 		Code:    http.StatusOK,
-		Message: "Success checkout order",
+		Message: "Success check history",
 		Data:    result,
 	}
 

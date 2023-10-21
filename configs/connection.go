@@ -120,11 +120,11 @@ func initConfig() *App {
 		return &conf
 	}
 
-	conf.Mysql.Host = os.Getenv("MYSQLDB_HOST")
-	conf.Mysql.Pass = os.Getenv("MYSQLDB_PASS")
-	conf.Mysql.User = os.Getenv("MYSQLDB_USER")
-	conf.Mysql.Port = os.Getenv("MYSQLDB_PORT")
-	conf.Mysql.Name = os.Getenv("MYSQLDB_NAME")
+	conf.Mysql.Host = os.Getenv("MYSQL_HOST")
+	conf.Mysql.Pass = os.Getenv("MYSQL_PASS")
+	conf.Mysql.User = os.Getenv("MYSQL_USER")
+	conf.Mysql.Port = os.Getenv("MYSQL_PORT")
+	conf.Mysql.Name = os.Getenv("MYSQL_DATABASE")
 
 	conf.Redis.Host = os.Getenv("REDIS_HOST")
 	conf.Redis.Port = os.Getenv("REDIS_PORT")

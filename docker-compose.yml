@@ -7,3 +7,32 @@ services:
     ports: 
       - 3000:3000
     container_name: uranus-app
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - uranusnet
+  
+  db:
+    image: mysql
+    container_name: uranus-db
+    ports:
+      - 3306:3306
+    env_file:
+      - .env
+    networks:
+      - uranusnet
+  
+  monitoring:
+    image: jaegertracing/all-in-one
+    container_name: uranus-monitoring
+    networks:
+      - uranusnet
+    ports:
+      - 6831:6831
+      - 16686:16686
+
+
+networks:
+  uranusnet:
