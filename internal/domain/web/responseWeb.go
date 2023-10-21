@@ -17,6 +17,7 @@ type ResponseSuccessAuth struct {
 	Data    any    `json:"data"`
 	Token   string `json:"token"`
 }
+
 type ValidationList struct {
 	Field string      `json:"field"`
 	Error interface{} `json:"error"`
