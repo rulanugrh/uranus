@@ -26,3 +26,13 @@ func (repo *paymentstruct) Save(req entity.PaymentSandbox) (*entity.PaymentSandb
 
 	return &req, nil
 }
+
+func (repo *paymentstruct) History(id uint) (*entity.PaymentSandbox, error) {
+	var req entity.PaymentSandbox
+	err := repo.DB.WithContext(context.Background()).Where("id = ?", id).Find(&req).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &req, nil
+}
