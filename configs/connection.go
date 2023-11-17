@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -9,6 +10,9 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/coreapi"
+	"github.com/redis/go-redis/v9"
+	"github.com/rulanugrh/uranus/internal/queue"
+	"github.com/rulanugrh/uranus/internal/webhook"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -53,6 +57,28 @@ func SetupMidtransSandbox() {
 	conf := GetConfig()
 	midtrans.ServerKey = conf.Midtrans.Sandbox
 	midtrans.Environment = midtrans.Sandbox
+}
+
+func SetupRedisConn() {
+	conf := GetConfig()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	client := redis.NewClient(&redis.Options{
+		Addr:     conf.Redis.Host,
+		Password: conf.Redis.Port,
+		DB:       0,
+	})
+
+	webhookQueue := make(chan webhook.WebhookPayload, 100)
+	go queue.ProcessWebhook(ctx, webhookQueue)
+	errRedis := webhook.Subscribe(ctx, client, webhookQueue)
+	if errRedis != nil {
+		log.Println("Error :", errRedis)
+	}
+
+	select {}
+
 }
 
 func GetMysqlConn() *gorm.DB {

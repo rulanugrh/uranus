@@ -34,5 +34,6 @@ func main() {
 
 	orderHandler := handler.NewOrderHandler(orderService, paymentMethod)
 
+	configs.SetupRedisConn()
 	route.Run(courseHandler, orderHandler, userHandler, categoryHandler)
 }
