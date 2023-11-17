@@ -9,10 +9,12 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/gorilla/mux"
+	"github.com/rulanugrh/uranus/configs"
 	"github.com/rulanugrh/uranus/internal/domain/entity"
 	"github.com/rulanugrh/uranus/internal/domain/web"
 	portHandler "github.com/rulanugrh/uranus/internal/http/port"
 	"github.com/rulanugrh/uranus/internal/middleware"
+	"github.com/rulanugrh/uranus/internal/sender"
 	"github.com/rulanugrh/uranus/internal/service/port"
 	portthirdparty "github.com/rulanugrh/uranus/third_party/midtrans/port"
 	"github.com/rulanugrh/uranus/third_party/monitoring"
@@ -22,6 +24,7 @@ type orderhandler struct {
 	service  port.OrderInterfaceService
 	payment  portthirdparty.PortSandbox
 	validate *validator.Validate
+	conf     configs.App
 }
 
 func NewOrderHandler(serv port.OrderInterfaceService, payment portthirdparty.PortSandbox) portHandler.OrderInterfaceHTTP {
@@ -128,6 +131,25 @@ func (hnd *orderhandler) TestCheckout(w http.ResponseWriter, r *http.Request) {
 		res := web.ResponseFailure{
 			Code:    http.StatusBadRequest,
 			Message: "Cant checkout order by this id",
+		}
+
+		response, _ := json.Marshal(res)
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write(response)
+	}
+
+	payload := sender.Payload{
+		Course:   req.CourseMod.Name,
+		Category: req.CourseMod.Categories.Name,
+		Price:    req.CourseMod.Price,
+		Payment:  string(result.PaymentType[0]),
+	}
+
+	errSend := sender.SendWebhook(payload, hnd.conf.WebhookURL, req.UserMod.Name)
+	if errSend != nil {
+		res := web.ResponseFailure{
+			Code:    http.StatusInternalServerError,
+			Message: "Cant send to webhook",
 		}
 
 		response, _ := json.Marshal(res)

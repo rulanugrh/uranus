@@ -47,6 +47,8 @@ type App struct {
 		Host string
 		Port string
 	}
+
+	WebhookURL string
 }
 
 var app *App
@@ -151,6 +153,8 @@ func initConfig() *App {
 		conf.Jaeger.Host = ""
 		conf.Jaeger.Port = ""
 
+		conf.WebhookURL = ""
+
 		return &conf
 	}
 
@@ -172,5 +176,6 @@ func initConfig() *App {
 
 	conf.Jaeger.Host = os.Getenv("JAEGER_HOST")
 	conf.Jaeger.Port = os.Getenv("JAEGER_PORT")
+	conf.WebhookURL = os.Getenv("WEBHOOK_URL")
 	return &conf
 }

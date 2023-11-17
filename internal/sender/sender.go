@@ -14,6 +14,7 @@ type Payload struct {
 	Category string
 	User     string
 	Payment  string
+	Price    int
 }
 
 func SendWebhook(data interface{}, url string, webhookID string) error {
