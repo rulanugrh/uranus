@@ -10,8 +10,9 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/midtrans/midtrans-go v1.3.7
 	github.com/opentracing/opentracing-go v1.2.0
+	github.com/redis/go-redis/v9 v9.3.0
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
-	golang.org/x/crypto v0.15.0
+	golang.org/x/crypto v0.16.0
 	gorm.io/driver/mysql v1.5.2
 	gorm.io/gorm v1.25.5
 )
@@ -28,11 +29,10 @@ require (
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
-	github.com/redis/go-redis/v9 v9.3.0 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
-	golang.org/x/sys v0.14.0 // indirect
+	golang.org/x/sys v0.15.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 )
